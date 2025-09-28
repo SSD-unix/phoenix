@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoenix Education Center</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color:#f5f5f5; color:#333; line-height:1.6; overflow-x:hidden; }
+
+        /* Видео-фон */
+        .video-background { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; overflow:hidden; }
+        .video-background video { min-width:100%; min-height:100%; width:auto; height:auto; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); opacity:0.15; filter: sepia(0.4) hue-rotate(320deg) saturate(1.5); object-fit:cover; }
+
+        /* Таскбар */
+        .taskbar { display:flex; justify-content:space-between; align-items:center; padding:15px 5%; background-color:rgba(120,0,0,0.85); box-shadow:0 4px 12px rgba(0,0,0,0.1); position:sticky; top:0; z-index:100; }
+        .logo-container { display:flex; align-items:center; }
+        .logo { height:50px; margin-right:15px; }
+        .logo-text { font-size:28px; font-weight:bold; color:#ffcc00; text-shadow:2px 2px 4px rgba(0,0,0,0.3); letter-spacing:1px; }
+        .nav-buttons { display:flex; gap:20px; }
+        .nav-button { padding:10px 25px; background-color:#ffcc00; color:#8b0000; border:none; border-radius:30px; font-weight:bold; cursor:pointer; transition: all 0.3s ease; box-shadow:0 4px 8px rgba(0,0,0,0.2); text-decoration:none; }
+        .nav-button:hover { background-color:#ffdb4d; transform:translateY(-2px); box-shadow:0 6px 12px rgba(0,0,0,0.25); }
+
+        /* Основной контент */
+        .container { max-width:1200px; margin:0 auto; padding:40px 20px; }
+        .section { background-color:rgba(255,255,255,0.9); border-radius:10px; padding:40px; margin-bottom:40px; box-shadow:0 8px 20px rgba(0,0,0,0.1); border-left:5px solid #8b0000; }
+        h1 { color:#8b0000; font-size:36px; margin-bottom:20px; text-align:center; position:relative; padding-bottom:15px; }
+        h1:after { content:""; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:100px; height:3px; background:linear-gradient(to right,#8b0000,#ffcc00,#8b0000); }
+        h2 { color:#8b0000; font-size:28px; margin:25px 0 15px; border-left:4px solid #ffcc00; padding-left:15px; }
+        p { margin-bottom:15px; font-size:18px; text-align:justify; }
+
+        .contact-info { display:flex; flex-wrap:wrap; gap:30px; margin-top:30px; }
+        .contact-item { flex:1; min-width:250px; background:rgba(139,0,0,0.05); padding:20px; border-radius:8px; border-left:4px solid #ffcc00; }
+        .contact-item i { font-size:24px; color:#8b0000; margin-right:10px; }
+
+        /* Форма обратной связи */
+        .form-container { background-color:rgba(255,255,255,0.95); border-radius:10px; padding:40px; box-shadow:0 8px 20px rgba(0,0,0,0.1); border-right:5px solid #ffcc00; }
+        .form-group { margin-bottom:25px; }
+        label { display:block; margin-bottom:8px; font-weight:bold; color:#8b0000; }
+        input, textarea { width:100%; padding:12px 15px; border:1px solid #ddd; border-radius:5px; font-size:16px; transition:border 0.3s; }
+        input:focus, textarea:focus { border-color:#8b0000; outline:none; box-shadow:0 0 0 2px rgba(139,0,0,0.2); }
+        .submit-btn { background-color:#8b0000; color:white; border:none; padding:14px 30px; font-size:18px; border-radius:30px; cursor:pointer; transition:all 0.3s ease; display:block; margin:0 auto; width:200px; }
+        .submit-btn:hover { background-color:#a30000; transform:translateY(-3px); box-shadow:0 6px 12px rgba(0,0,0,0.2); }
+
+        /* Китайский декор */
+        .chinese-decoration { text-align:center; margin:30px 0; font-size:24px; color:#8b0000; font-weight:bold; letter-spacing:5px; }
+        .dragon-border { height:20px; background:linear-gradient(90deg,#8b0000,#ffcc00,#8b0000); margin:40px 0; position:relative; border-radius:10px; }
+        .dragon-border:before, .dragon-border:after { content:"🐉"; position:absolute; top:50%; transform:translateY(-50%); font-size:24px; }
+        .dragon-border:before { left:10px; }
+        .dragon-border:after { right:10px; }
+
+        /* Футер */
+        footer { background-color:rgba(120,0,0,0.9); color:#ffcc00; text-align:center; padding:30px 0; margin-top:50px; }
+        .footer-content { max-width:1200px; margin:0 auto; padding:0 20px; }
+        .social-icons { margin:20px 0; }
+        .social-icons a { color:#ffcc00; font-size:24px; margin:0 15px; transition:color 0.3s; }
+        .social-icons a:hover { color:white; }
+
+        /* Адаптивность */
+        @media (max-width:768px) {
+            .taskbar { flex-direction:column; padding:15px; }
+            .logo-container { margin-bottom:15px; }
+            .nav-buttons { width:100%; justify-content:center; }
+            .section, .form-container { padding:25px; }
+            .contact-info { flex-direction:column; }
+        }
+
+        /* Уведомления */
+        .notification { position:fixed; top:20px; right:20px; padding:15px 25px; background-color:#4CAF50; color:white; border-radius:5px; box-shadow:0 4px 8px rgba(0,0,0,0.2); z-index:1000; display:none; }
+        .notification.error { background-color:#f44336; }
+    </style>
+</head>
+<body>
+
+    <!-- Видео-фон -->
+    <div class="video-background">
+        <video autoplay muted loop>
+            <source src="https://www.w3schools.com/howto/rain.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- Таскбар -->
+    <div class="taskbar">
+        <div class="logo-container">
+            <img src="https://scontent.fevn6-3.fna.fbcdn.net/v/t39.30808-6/304836241_479517247516018_2526099913870442907_n.png?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=2nO2-HJbDdEQ7kNvwEmFes3&_nc_oc=AdkRIh3w7xQNkkU0tffBJsPwFyKWunVjOLw4SCI6w8fIqgK0c8aFPKspubSmj5futXZDmj_h7nAuz0wwVmk0alOt&_nc_zt=23&_nc_ht=scontent.fevn6-3.fna&_nc_gid=cFb5iTrwGlWNpjtvW4lhmw&oh=00_AfagTcTWIHY5rcGvhEF8LDTFnoLbsnFze4pP3EqonrLR8g&oe=68DEAAE5" alt="Phoenix Logo" class="logo">
+            <div class="logo-text">PHOENIX</div>
+        </div>
+        <div class="nav-buttons">
+            <a href="#start" class="nav-button">Начать</a>
+            <a href="#contacts" class="nav-button">Контакты</a>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container">
+        <div class="section" id="start">
+            <h1>Кто мы</h1>
+            <div class="dragon-border"></div>
+            <p>Преподаватели нашего Центра имеют профильное высшее образование, международную сертификацию и солидный опыт работы. Мы эффективно работаем с малышами, школьниками и взрослыми.</p>
+            <p>Уроки могут проходить в любом удобном вам приложении в Zoom, Skype, Wechat и т.д.</p>
+            
+            <h2>Наши преимущества</h2>
+            <p><i class="fas fa-check" style="color: #8b0000;"></i> Индивидуальный подход к каждому студенту</p>
+            <p><i class="fas fa-check" style="color: #8b0000;"></i> Современные методики обучения</p>
+            <p><i class="fas fa-check" style="color: #8b0000;"></i> Гибкий график занятий</p>
+            <p><i class="fas fa-check" style="color: #8b0000;"></i> Международные сертификаты</p>
+            
+            <div class="chinese-decoration">凤凰教育中心 - 您的成功之路</div>
+        </div>
+
+        <div class="section" id="contacts">
+            <h1>Контакты</h1>
+            <div class="dragon-border"></div>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <strong>Телефон:</strong> 055 388801
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <strong>Email:</strong> phoenix.ec@mail.ru
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <strong>Адреса:</strong> Армения, Иран, США, Китай
+                </div>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <h1>Свяжитесь с нами</h1>
+            <div class="dragon-border"></div>
+            <form id="contact-form">
+                <div class="form-group">
+                    <label for="name">Имя и фамилия:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Электронная почта:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Сообщение:</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Отправить заявку</button>
+            </form>
+            <div id="form-message" style="text-align:center; margin-top:15px; font-weight:bold;"></div>
+        </div>
+    </div>
+
+    <!-- Футер -->
+    <footer>
+        <div class="footer-content">
+            <div class="social-icons">
+                <a href="https://www.facebook.com/PhoenixEducational1/about_contact_and_basic_info" target="_blank"><i class="fab fa-facebook"></i></a>
+                <a href="tel:077851999" target="_blank"><i class="fab fa-weixin"></i></a>
+            </div>
+            <p>Phoenix Education Center © 2023. Все права защищены.</p>
+            <p>凤凰教育中心 - 知识改变命运</p>
+        </div>
+    </footer>
+
+    <!-- JS -->
+    <script>
+        // Форма через Formcarry
+        document.getElementById("contact-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            let form = e.target;
+            let data = new FormData(form);
+
+            fetch("https://formcarry.com/s/h1E_u8SOQaJ", {  
+                method: "POST",
+                body: data,
+                headers: { "Accept": "application/json" }
+            })
+            .then(res => res.json())
+            .then(response => {
+                if (response.status === "success") {
+                    document.getElementById("form-message").innerText = "✅ Сообщение отправлено!";
+                    form.reset();
+                } else {
+                    document.getElementById("form-message").innerText = "❌ Ошибка: " + response.message;
+                }
+            })
+            .catch(() => {
+                document.getElementById("form-message").innerText = "⚠️ Ошибка соединения.";
+            });
+        });
+
+        // Плавная прокрутка
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+            });
+        });
+
+        // Автовоспроизведение видео
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.querySelector('video');
+            if(video) video.play().catch(() => console.log('Автовоспроизведение заблокировано.'));
+        });
+    </script>
+</body>
+</html>
